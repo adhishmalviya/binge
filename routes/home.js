@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/',(req,res)=>
 {
 res.render('index',{
-    title:"Binge! Home", message:"Hello This is Binge!"
+    title:"Binge! Home", message:"Hello, Welcome to"
 
 });
 
