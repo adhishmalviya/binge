@@ -6,11 +6,23 @@ const config=require('config');
 const startupDebugger= require('debug')('binge:startup');//export DEBUG=binge:startup
 const dbDebugger=require('debug')('binge:db');//export DEBUG=binge:db
 const morgan = require('morgan');
+const custom_logger=require('./middlewares/logger');
 
 var app=express();
 app.use(express.json());
+app.use(express.static('public'));
+app.use(custom_logger);
+
+
+if(app.get('env')==='development')//default value is development 
+{
+    app.use(morgan('tiny'));// tiny is argument given for minimal log.
+    //this is a middleware that's why this should be put above route handlers
+    startupDebugger("Morgan Enabled.");
+}
+
 app.use('/genres',genres);
-app.use('/',home);
+app.use('/',home);//refactoring different routes 
 app.set('view engine','pug');// pug is a template engine used to send HTML responses
 //app.set ('views','./views');//default & optional to set path of views 
 
@@ -20,12 +32,7 @@ console.log("Application Name:",config.get('name'));
 console.log("Mail Server",config.get('mail.host'));//export NODE_ENV=development
 console.log("Password",config.get('password'));//export app_password=1234
 
-if(app.get('env')==='development')
-{
-    app.use(morgan('tiny'));
-    
-    startupDebugger("Morgan Enabled.");
-}
+
 //Put some database work hare
 dbDebugger("database debugger check");
 
