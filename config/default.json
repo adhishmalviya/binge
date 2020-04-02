@@ -1,0 +1,7 @@
+{
+    "name":"Binge!",
+    "mail" : {
+        "host":"default-mail-server"
+        
+    }
+}
