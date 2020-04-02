@@ -13,7 +13,9 @@
   "author": "Adhish Bhai!",
   "license": "ISC",
   "dependencies": {
+    "config": "^3.3.1",
     "express": "^4.17.1",
-    "joi": "^14.3.1"
+    "joi": "^14.3.1",
+    "pug": "^2.0.4"
   }
 }
