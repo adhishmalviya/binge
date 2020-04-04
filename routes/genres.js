@@ -1,33 +1,34 @@
+const mongoose=require('mongoose');
 const express = require('express');
+const Joi=require('joi');
 const router = express.Router();
-
-
-genres=[{
-    id:1, genre:'Thriller'},{
-        id:2, genre:'Comedy'},{
-            id:3, genre:'Fantasy'}];
-
-
-router.get('/',(req,res)=>{
-res.send(genres);
-
-});
-
-router.get('/:id',(req,res)=>{
-
-    let genre=genres.find(f=>{return f.id==req.params.id});// f=>f.id===req.params.id 
-    if(!genre)
-    {
-        res.status(404).send("No genre with this id exists");
-        return;
-
+const Genre=mongoose.model('Genre',new mongoose.Schema({
+    name:{
+        type:String,
+        required:true,
+        minlength:4,
+        maxlength:20
     }
-    res.send(genre);
 
+}));
+
+
+
+router.get('/',async(req,res)=>{
+const genres = await Genre.find().sort('name');
+res.send(genres);
+});
+
+router.get('/:id',async (req,res)=>{
+
+    let genre=await Genre.findById(req.params.id);
+    if(!genre)
+    return res.status(404).send("No genre with this id exists");
+    res.send(genre);
 });
 
 
-router.post('/',(req,res)=>{
+router.post('/',async (req,res)=>{
 
     let { error }= validateGenre(req.body);// OBJECT DESTRUCTURING
 
@@ -35,77 +36,51 @@ if(error)
 {
     let error_message="";
     for(field in error.details)
-    {
-        error_message+=error.details[field].message;
-
-    }
-    res.status(400).send(error_message);
-    return;
+    error_message+=error.details[field].message;
+    return res.status(400).send(error_message);
 }
-    const new_genre= {
-        id: genres.length+1,
-        genre : req.body.genre
-    };
-    genres.push(new_genre);
+    let new_genre= Genre({ name: req.body.genre});
+    new_genre=await new_genre.save();
     res.send(new_genre);
 
 });
 
 
-router.put('/:id',(req,res)=>
-{
-    let genre=genres.find(f=>{return f.id==req.params.id});// f=>f.id===req.params.id 
+router.put('/:id',async (req,res)=>
+{   let { error }= validateGenre(req.body);// OBJECT DESTRUCTURING
+
+        if(error)
+        {
+            let error_message="";
+            for(field in error.details)
+            error_message+=error.details[field].message;
+            res.status(400).send(error_message);
+            return;
+        }
+    let genre=await Genre.findByIdAndUpdate(req.params.id,{name:req.body.name},{new:true}); 
     if(!genre)
-    {
-        res.status(404).send("No genre with this id exists");
-        return;
+    return res.status(404).send("No genre with this id exists");
+        res.send(genre);
 
-    }
+});
 
-    let { error }= validateGenre(req.body);// OBJECT DESTRUCTURING
-
-if(error)
+router.delete('/:id',async (req,res)=>
 {
-    let error_message="";
-    for(field in error.details)
-    {
-        error_message+=error.details[field].message;
-
-    }
-    res.status(400).send(error_message);
-    return;
-}
- 
-genre.genre=req.body.genre;
-res.send(genre);
-
+    let genre=await Genre.findByIdAndRemove(req.params.id)
+    if(!genre)
+    return res.status(404).send("No genre with this id exists");
+    res.send(genre);
 });
 
 function validateGenre(request_body)
 {
-
-    const genre_schema = {
-        genre:Joi.string().min(3).required()
+        const genre_schema = {
+        name:Joi.string().min(3).required()
     };
     
     return Joi.validate(request_body,genre_schema);
 };
 
-
-router.delete('/:id',(req,res)=>
-{
-    let genre=genres.find(f=>{return f.id==req.params.id});// f=>f.id===req.params.id 
-    if(!genre)
-    {
-        res.status(404).send("No genre with this id exists");
-        return;
-
-    }
-const index = genres.indexOf(genre);
-genres.splice(index,1);
-res.send(genre);
-
-});
 
 
 module.exports = router;
