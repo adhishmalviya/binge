@@ -1,16 +1,8 @@
 const mongoose=require('mongoose');
 const express = require('express');
-const Joi=require('joi');
 const router = express.Router();
-const Genre=mongoose.model('Genre',new mongoose.Schema({
-    name:{
-        type:String,
-        required:true,
-        minlength:4,
-        maxlength:20
-    }
+const {Genre,validate}=require('../models/genre');
 
-}));
 
 
 
@@ -71,15 +63,6 @@ router.delete('/:id',async (req,res)=>
     return res.status(404).send("No genre with this id exists");
     res.send(genre);
 });
-
-function validateGenre(request_body)
-{
-        const genre_schema = {
-        name:Joi.string().min(3).required()
-    };
-    
-    return Joi.validate(request_body,genre_schema);
-};
 
 
 
