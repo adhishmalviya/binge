@@ -22,7 +22,7 @@ router.get('/:id',async (req,res)=>{
 
 router.post('/',async (req,res)=>{
 
-    let { error }= validateGenre(req.body);// OBJECT DESTRUCTURING
+    let { error }= validate(req.body);// OBJECT DESTRUCTURING
 
 if(error)
 {
@@ -31,7 +31,7 @@ if(error)
     error_message+=error.details[field].message;
     return res.status(400).send(error_message);
 }
-    let new_genre= Genre({ name: req.body.genre});
+    let new_genre= Genre({ name: req.body.name});
     new_genre=await new_genre.save();
     res.send(new_genre);
 
@@ -39,7 +39,7 @@ if(error)
 
 
 router.put('/:id',async (req,res)=>
-{   let { error }= validateGenre(req.body);// OBJECT DESTRUCTURING
+{   let { error }= validate(req.body);// OBJECT DESTRUCTURING
 
         if(error)
         {
