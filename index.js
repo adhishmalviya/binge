@@ -4,6 +4,7 @@ const genres= require('./routes/genres');
 const home=require('./routes/home');
 const movies =require('./routes/movies');
 const customers=require('./routes/customers');
+const rentals=require('./routes/rentals');
 const config=require('config');
 const startupDebugger= require('debug')('binge:startup');//export DEBUG=binge:startup
 const dbDebugger=require('debug')('binge:db');//export DEBUG=binge:db
@@ -20,7 +21,6 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use(custom_logger);
 
-
 if(app.get('env')==='development')//default value is development 
 {
     app.use(morgan('tiny'));// tiny is argument given for minimal log.
@@ -31,6 +31,8 @@ if(app.get('env')==='development')//default value is development
 app.use('/genres',genres);
 app.use('/customers',customers);
 app.use('/movies',movies);
+app.use('/rentals',rentals);
+
 app.use('/',home);//refactoring different routes 
 app.set('view engine','pug');// pug is a template engine used to send HTML responses
 //app.set ('views','./views');//default & optional to set path of views 
