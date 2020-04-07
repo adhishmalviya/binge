@@ -3,5 +3,8 @@
     "mail" : {
         "host":"default-mail-server"
         
-    }
+    },
+    "jwtPrivateKey": "",
+    "password":""
+
 }

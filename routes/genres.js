@@ -2,7 +2,8 @@ const mongoose=require('mongoose');
 const express = require('express');
 const router = express.Router();
 const {Genre,validate}=require('../models/genre');
-
+const admin =require('../middlewares/admin');
+const auth=require('../middlewares/auth');
 
 
 
@@ -20,7 +21,7 @@ router.get('/:id',async (req,res)=>{
 });
 
 
-router.post('/',async (req,res)=>{
+router.post('/',auth,async (req,res)=>{
 
     let { error }= validate(req.body);// OBJECT DESTRUCTURING
 
@@ -38,7 +39,7 @@ if(error)
 });
 
 
-router.put('/:id',async (req,res)=>
+router.put('/:id',auth,async (req,res)=>
 {   let { error }= validate(req.body);// OBJECT DESTRUCTURING
 
         if(error)
@@ -56,7 +57,7 @@ router.put('/:id',async (req,res)=>
 
 });
 
-router.delete('/:id',async (req,res)=>
+router.delete('/:id',[admin,auth],async (req,res)=>
 {
     let genre=await Genre.findByIdAndRemove(req.params.id)
     if(!genre)

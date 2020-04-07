@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
   return res.status(400).send('Invalid genre.');
   
  }
-let movie = new Movie({ 
+const movie = new Movie({ // Statement A
     title: req.body.title,
     genre: {
       _id: genre._id,
@@ -30,8 +30,8 @@ let movie = new Movie({
     numberInStock: req.body.numberInStock,
     dailyRentalRate: req.body.dailyRentalRate
   });
-  movie = await movie.save();
-  
+  await movie.save();// we dont need to save movie=await movie.save()
+  // as mongoose saved it aleardy using mongo driver during execution of statement A
   res.send(movie);
 });
 

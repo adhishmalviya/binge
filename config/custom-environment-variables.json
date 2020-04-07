@@ -1,7 +1,9 @@
 {
    
     
- "password":"app_password"
+ "password":"binge_password",
+ "jwtPrivateKey": "binge_Adhish"
+
         
     
 }
