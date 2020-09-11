@@ -13,7 +13,7 @@
   "author": "Adhish Bhai!",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^5.0.0",
     "bcrypt-nodejs": "0.0.3",
     "config": "^3.3.1",
     "debugger": "^0.35.0",
